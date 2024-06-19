@@ -1,4 +1,4 @@
-# main_container/Dockerfile
+# challenges/challenge1/Dockerfile
 
 FROM ubuntu:20.04
 
@@ -24,15 +24,14 @@ RUN echo 'ctfuser:ctfuser' | chpasswd
 RUN echo 'PasswordAuthentication yes' >> /etc/ssh/sshd_config
 RUN echo 'PermitUserEnvironment yes' >> /etc/ssh/sshd_config
 
-# Add start_challenge script and challenges directory
-ADD ./start_challenge.sh /home/ctfuser/start_challenge.sh
-ADD ./challenges /home/ctfuser/challenges
+# Add challenge files
+ADD ./challenges/challenge1 /home/ctfuser/challenge
 
-RUN chown -R ctfuser:ctfuser /home/ctfuser/challenges
-RUN chown ctfuser:ctfuser /home/ctfuser/start_challenge.sh
-RUN chmod +x /home/ctfuser/start_challenge.sh
+RUN chown -R ctfuser:ctfuser /home/ctfuser/challenge
+RUN chmod +x /home/ctfuser/challenge/start.sh
 
-RUN echo "source /home/ctfuser/start_challenge.sh" >> /home/ctfuser/.bashrc
+# Remove the setup script after container starts
+RUN echo "rm -rf /home/ctfuser/challenge/start.sh" >> /home/ctfuser/.bashrc
 
 # Expose SSH port
 EXPOSE 22

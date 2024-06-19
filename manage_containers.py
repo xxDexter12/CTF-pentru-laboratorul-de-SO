@@ -3,7 +3,7 @@ import docker
 import random
 import string
 
-app = Flask(__name__)
+app = Flask(_name_)
 client = docker.from_env()
 
 def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
@@ -17,15 +17,16 @@ def start_container():
     
     try:
         container = client.containers.run(
-            "linux_mint_ctf",  # Numele imaginii Docker pentru Linux Mint CTF
+            "linux_mint_ctf",
             detach=True,
             name=container_name,
-            ports={'22/tcp': port}  # Maparea portului SSH
+            ports={'22/tcp': port}
         )
         response = {
             'message': f"Container started for user {user_id} on port {port}",
             'container_id': container.id,
-            'port': port
+            'port': port,
+            'ssh_command': f"ssh ctfuser@localhost -p {port}"
         }
         return jsonify(response), 200
     except Exception as e:
@@ -57,5 +58,5 @@ def list_containers():
     container_list = [{'id': c.id, 'name': c.name, 'status': c.status} for c in containers]
     return jsonify(container_list), 200
 
-if __name__ == '__main__':
+if _name_ == '_main_':
     app.run(host='0.0.0.0', port=5000)
