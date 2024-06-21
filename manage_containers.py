@@ -3,11 +3,23 @@ import docker
 import random
 import string
 
-app = Flask(_name_)
+app = Flask(__name__)
 client = docker.from_env()
 
 def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
+
+def cleanup_container(container_name):
+    try:
+        container = client.containers.get(container_name)
+        if container:
+            container.stop()
+            container.remove()
+            print(f"Container {container_name} stopped and removed")
+        else:
+            print(f"Container {container_name} not found")
+    except Exception as e:
+        print(f"Failed to stop container {container_name}: {str(e)}")
 
 @app.route('/start_container', methods=['POST'])
 def start_container():
@@ -16,6 +28,10 @@ def start_container():
     port = request.json.get('port')
     
     try:
+        # Cleanup pentru containerul anterior (dacă există)
+        cleanup_container(container_name)
+
+        # Pornirea unui nou container pentru utilizatorul curent
         container = client.containers.run(
             "linux_mint_ctf",
             detach=True,
@@ -37,20 +53,12 @@ def start_container():
 
 @app.route('/stop_container', methods=['POST'])
 def stop_container():
-    container_id = request.json.get('container_id')
-    try:
-        container = client.containers.get(container_id)
-        container.stop()
-        container.remove()
-        response = {
-            'message': f"Container {container_id} stopped and removed"
-        }
-        return jsonify(response), 200
-    except Exception as e:
-        response = {
-            'message': f"Failed to stop container: {str(e)}"
-        }
-        return jsonify(response), 500
+    container_name = request.json.get('container_name')
+    cleanup_container(container_name)
+    response = {
+        'message': f"Container {container_name} stopped and removed"
+    }
+    return jsonify(response), 200
 
 @app.route('/list_containers', methods=['GET'])
 def list_containers():
@@ -58,5 +66,5 @@ def list_containers():
     container_list = [{'id': c.id, 'name': c.name, 'status': c.status} for c in containers]
     return jsonify(container_list), 200
 
-if _name_ == '_main_':
+if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

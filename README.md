@@ -17,7 +17,11 @@
         └── start.sh
 
 docker build -t linux_mint_ctf main_container/
-docker build -t linux_mint_ctf_challenge1 challenges/challenge1/
-docker build -t linux_mint_ctf_challenge2 challenges/challenge2/
+docker build -t linux_mint_ctf_challenge1 .
+docker build -t linux_mint_ctf_challenge2 .
 python manage_containers.py
 curl -X POST -H "Content-Type: application/json" -d '{"port": 2222}' http://localhost:5000/start_container
+ssh ctfuser@localhost -p 2222
+docker ps -q --filter "name=${current_user}_*" | xargs docker stop
+ssh-keygen -f "/home/bogdan/.ssh/known_hosts" -R "[localhost]:2222"
+
