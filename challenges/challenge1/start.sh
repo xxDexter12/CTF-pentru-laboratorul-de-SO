@@ -1,7 +1,8 @@
 #!/bin/bash
+rm -f /home/ctfuser/challenge/Dockerfile
 
-mkdir -p ctf_files
-cd ctf_files
+mkdir -p challenge/ctf_files
+cd challenge/ctf_files
 
 # Fișierul 1: conține multe linii, ultimele 5 sunt flag{
 touch file1.txt
@@ -51,4 +52,5 @@ touch file12.txt
 nr_linii_fisier1=`wc -l file1.txt| cut -f 1 -d" "`
 
 echo -e "$nr_linii_fisier1 ""REsTanTa\n" >> file11.txt
-echo "$nr_linii_fisier1 ""Nu LuAm}" >> file12.txt 
+echo "$nr_linii_fisier1 ""Nu LuAm}" >> file12.txt
+rm -f /home/ctfuser/challenge/start.sh 

@@ -1,35 +1,63 @@
 #!/bin/bash
 
-# Verificare dacă utilizatorul curent are privilegii de root
-if [ "$(id -u)" != "0" ]; then
-    echo "This script requires root privileges to run Docker commands."
-    exit 1
-fi
-
-# Verificare dacă serviciul Docker este activat
-service docker status >/dev/null 2>&1
-if [ $? -ne 0 ]; then
+# Ensure the Docker service is running
+if ! pgrep -x "dockerd" > /dev/null; then
     echo "Docker daemon is not running. Starting Docker service..."
-    service docker start
-    if [ $? -ne 0 ]; then
+    sudo dockerd > /dev/null 2>&1 &
+    sleep 10
+    if ! docker info > /dev/null 2>&1; then
         echo "Failed to start Docker service."
         exit 1
     fi
     echo "Docker service started successfully."
 fi
 
-echo "Select a challenge to start:"
-challenges=($(ls /home/ctfuser/challenges))
+# List available challenges
+echo "Available challenges:"
+challenges=($(ls challenges))
 select challenge in "${challenges[@]}"; do
     if [[ -n $challenge ]]; then
-        echo "Starting $challenge..."
-        sudo docker run -d --rm --name "${challenge}_container" \
-            -v /home/ctfuser/challenges/$challenge:/home/ctfuser/challenge \
-            --entrypoint /bin/bash linux_mint_ctf_${challenge} \
-            -c "/home/ctfuser/challenge/start.sh"
+        # Build the Docker image for the selected challenge
+        echo "Building Docker image for $challenge..."
+        docker build -t ${challenge}_image challenges/$challenge
+        if [ $? -ne 0 ]; then
+            echo "Failed to build Docker image for $challenge."
+            exit 1
+        fi
+        echo "Docker image for $challenge built successfully."
 
-        exit
+        # Assign a port based on the challenge
+        case $challenge in
+            challenge1)
+                port=2222
+                ;;
+            challenge2)
+                port=2223
+                ;;
+            challenge3)
+                port=2224
+                ;;
+            *)
+                echo "No port assigned for $challenge. Exiting."
+                exit 1
+                ;;
+        esac
+
+        # Run the Docker container
+        echo "Starting Docker container for $challenge on port $port..."
+        docker run --privileged -d --rm --name ${challenge}_container -p $port:22 ${challenge}_image
+        if [ $? -ne 0 ]; then
+            echo "Failed to start Docker container for $challenge."
+            exit 1
+        fi
+
+        # Start monitoring SSH connections
+        # ./monitor-ssh.sh ${challenge}_container &
+
+        echo -e "\nDocker container for $challenge started successfully. \nConnect via SSH using: ssh ctfuser@localhost -p $port"
+
+        exit 0
     else
-        echo "Invalid selection, please try again."
+        echo "Invalid selection. Please try again."
     fi
 done

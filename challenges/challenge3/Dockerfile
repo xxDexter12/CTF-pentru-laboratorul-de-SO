@@ -22,7 +22,6 @@ RUN chown -R ctfuser:ctfuser /home/ctfuser/challenge && \
 # Add entrypoint script
 ADD monitor-ssh.sh /usr/local/bin/monitor-ssh.sh
 RUN chmod +x /usr/local/bin/monitor-ssh.sh
-
 # Expose SSH port
 EXPOSE 22
 
