@@ -1,3 +1,3 @@
 # lab 4
 # flag{string}
-# hint: "si tu brutus?"
+# hint: "si tu brutus?" (cyberchef)
