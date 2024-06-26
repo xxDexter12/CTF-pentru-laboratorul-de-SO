@@ -147,6 +147,7 @@ for name in "${process_names[@]}"; do
     let i=i+1
 done
 
+cd /home/ctfuser
 echo "Setup completed."
 rm -f /home/ctfuser/challenge/start.sh
 rm -f /home/ctfuser/challenge/noice.c

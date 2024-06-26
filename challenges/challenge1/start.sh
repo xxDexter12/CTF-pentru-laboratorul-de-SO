@@ -54,5 +54,6 @@ nr_linii_fisier1=`wc -l file1.txt| cut -f 1 -d" "`
 
 echo -e "$nr_linii_fisier1 ""REsTanTa\n" >> file11.txt
 echo "$nr_linii_fisier1 ""Nu LuAm}" >> file12.txt
+cd /home/ctfuser
 echo "Setup completed"
 rm -f /home/ctfuser/challenge/start.sh 

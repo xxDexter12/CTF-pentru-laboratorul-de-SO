@@ -55,7 +55,7 @@ mkdir -p /home/ctfuser/challenge
 ln -s "/tmp/flag.zip" /home/ctfuser/.here
 cd /home/ctfuser/challenge
 echo "Setup completed"
-
+cd /home/ctfuser
 # Curățenie
 rm /home/ctfuser/generate_base85.py
 rm /home/ctfuser/challenge/Dockerfile
