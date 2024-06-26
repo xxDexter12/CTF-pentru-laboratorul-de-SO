@@ -1,10 +1,12 @@
 FROM ubuntu:20.04
 
+# Set non-interactive frontend for debconf and timezone
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Europe/Bucharest
+
 # Install necessary utilities
 RUN apt-get update && \
-    apt-get install -y openssh-server sudo
-
-RUN apt-get update && apt-get install -y gcc make
+    apt-get install -y openssh-server sudo gcc make python3 python3-pip zip
 
 # Create and configure ctfuser
 RUN useradd -ms /bin/bash ctfuser && \
