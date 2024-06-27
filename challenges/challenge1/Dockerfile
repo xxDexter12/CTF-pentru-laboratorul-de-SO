@@ -1,7 +1,7 @@
 FROM ubuntu:20.04
 
 RUN apt-get update && \
-    apt-get install -y openssh-server sudo
+    apt-get install -y openssh-server sudo gcc make
 
 RUN useradd -ms /bin/bash ctfuser && \
     echo 'ctfuser:ctfuser' | chpasswd
@@ -15,6 +15,8 @@ RUN sed -i 's/^session    optional     pam_motd.so/#session    optional     pam_
     chmod -x /etc/update-motd.d/*
 
 ADD . /home/ctfuser/challenge
+
+RUN gcc /home/ctfuser/challenge/verificare_flag.c -o /home/ctfuser/challenge/verificare_flag
 
 RUN chown root:root /home/ctfuser/challenge/verificare_flag && \
     chmod 4755 /home/ctfuser/challenge/verificare_flag

@@ -2,32 +2,28 @@
 #include <string.h>
 #include <stdlib.h>
 
-// Function to decode the encoded flag
-void decode_flag(char *encoded_flag, char *decoded_flag) {
-    int i;
-    for (i = 0; encoded_flag[i] != '\0'; i++) {
-        decoded_flag[i] = encoded_flag[i] ^ 0xAA; // XOR with 0xAA for obfuscation
+// Function to decode the encoded flag from hex and XOR with 0xAA
+void decode_flag(const char *encoded_flag_hex, char *decoded_flag) {
+    size_t len = strlen(encoded_flag_hex) / 2;
+    for (size_t i = 0; i < len; i++) {
+        char byte_str[3] = { encoded_flag_hex[2*i], encoded_flag_hex[2*i+1], '\0' };
+        unsigned char byte = (unsigned char)strtol(byte_str, NULL, 16);
+        decoded_flag[i] = byte ^ 0xAA; // XOR with 0xAA for obfuscation
     }
-    decoded_flag[i] = '\0';
+    decoded_flag[len] = '\0';
 }
 
 int main(int argc, char *argv[]) {
-    char encoded_flag[] = {
-        0xcc, 0xc6, 0xcb, 0xcd, 0xd1, 0xe6, 0x9e, 0xc8, 0x9a, 0xd8, 0x9e, 0xde, 
-        0x9a, 0xd8, 0xf5, 0xe9, 0x9a, 0xc7, 0x99, 0xc4, 0xd0, 0x9b, 0xf5, 0xe6, 
-        0x9b, 0xc4, 0xdf, 0xd2, 0xd2, 0xf5, 0x98, 0x9a, 0x98, 0x9f, 0x8a, 0x98, 
-        0x9b, 0x98, 0x9e, 0x8a, 0xf8, 0xef, 0xd9, 0xfe, 0xcb, 0xc4, 0xfe, 0xcb, 
-        0x8a, 0xe4, 0xdf, 0x8a, 0xe6, 0xdf, 0xeb, 0xc7, 0xd7, 0x00
-    };
-    char static_flag[sizeof(encoded_flag)];
-    decode_flag(encoded_flag, static_flag);
+    const char encoded_flag_hex[] = "ccc6cbcdd1e69ec89ad89ede9ad8f5e99ac799c4d09bf5e69bc4dfd2d2989a989f8a989b989e8af8efd9fecbc4fecb8ae4df8ae6dfebc7d7";
+    char decoded_flag[sizeof(encoded_flag_hex) / 2 + 1];
+    decode_flag(encoded_flag_hex, decoded_flag);
 
     if (argc != 2) {
         printf("Utilizare: %s <flag>\n", argv[0]);
         return 1;
     }
 
-    if (strcmp(argv[1], static_flag) == 0) {
+    if (strcmp(argv[1], decoded_flag) == 0) {
         printf("flag corect\n");
     } else {
         printf("flag incorect, mai incercati\n");

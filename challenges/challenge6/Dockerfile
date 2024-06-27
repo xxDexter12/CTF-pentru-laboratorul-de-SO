@@ -15,16 +15,19 @@ RUN mkdir /var/run/sshd && \
     echo 'PermitUserEnvironment yes' >> /etc/ssh/sshd_config && \
     echo 'PermitRootLogin no' >> /etc/ssh/sshd_config
 
+    RUN echo "ClientAliveInterval 5" >> /etc/ssh/sshd_config && \
+    echo "ClientAliveCountMax 0" >> /etc/ssh/sshd_config
+
 
 RUN sed -i 's/^session    optional     pam_motd.so/#session    optional     pam_motd.so/' /etc/pam.d/sshd && \
     chmod -x /etc/update-motd.d/*
 
+RUN echo 'ctfuser ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 ADD . /home/ctfuser/challenge
 
 RUN chown -R ctfuser:ctfuser /home/ctfuser/challenge && \
-    chmod +x /home/ctfuser/challenge/start.sh && \
-    echo "source /home/ctfuser/challenge/start.sh" >> /home/ctfuser/.bashrc
+    chmod +x /home/ctfuser/challenge/start.sh
 
     RUN gcc /home/ctfuser/challenge/verificare_flag.c -o /home/ctfuser/challenge/verificare_flag
 
@@ -32,18 +35,8 @@ RUN chown -R ctfuser:ctfuser /home/ctfuser/challenge && \
 RUN chown root:root /home/ctfuser/challenge/verificare_flag && \
     chmod 4755 /home/ctfuser/challenge/verificare_flag
 
-RUN chmod +x /home/ctfuser/challenge/.script.sh
-RUN mv /home/ctfuser/challenge/.script.sh /usr/local/src/
-RUN echo "*/1 * * * * /usr/local/src/.script.sh" > /tmp/ctfuser-cron && \
-    crontab -u ctfuser /tmp/ctfuser-cron
-
-RUN chmod 0644 /tmp/ctfuser-cron
-#RUN chown ctfuser:ctfuser /home/ctfuser/.bashrc
-
-#RUN echo 'ctfuser ALL=(ALL) NOPASSWD: /usr/bin/ls' >> /etc/sudoers && \
- #   echo 'ctfuser ALL=(ALL) NOPASSWD: !/bin/su, !/usr/bin/su, !/usr/bin/sudo' >> /etc/sudoers && \
-  #  echo 'ctfuser ALL=(ALL) NOPASSWD: !/usr/bin/cat /home/ctfuser/challenge/verificare_flag' >> /etc/sudoers && \
-   # echo 'ctfuser ALL=(ALL) NOPASSWD: !/bin/cat /home/ctfuser/challenge/verificare_flag' >> /etc/sudoers
+RUN /home/ctfuser/challenge/start.sh
+RUN service ssh restart
 
 EXPOSE 22
 

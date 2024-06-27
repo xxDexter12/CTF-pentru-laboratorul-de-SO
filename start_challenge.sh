@@ -43,6 +43,9 @@ select challenge in "${challenges[@]}"; do
             challenge5)
                 port=2226
                 ;;
+            challenge6)
+                port=2227
+                ;;
             *)
                 echo "No port assigned for $challenge. Exiting."
                 exit 1

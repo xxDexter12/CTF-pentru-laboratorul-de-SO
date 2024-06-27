@@ -4,7 +4,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Europe/Bucharest
 
 RUN apt-get update && \
-    apt-get install -y openssh-server sudo
+    apt-get install -y openssh-server sudo gcc make
 
 RUN useradd -ms /bin/bash ctfuser && \
     echo 'ctfuser:ctfuser' | chpasswd
@@ -19,11 +19,15 @@ RUN mkdir /var/run/sshd && \
 RUN sed -i 's/^session    optional     pam_motd.so/#session    optional     pam_motd.so/' /etc/pam.d/sshd && \
     chmod -x /etc/update-motd.d/*
 
+    RUN echo 'ctfuser ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+    
 ADD . /home/ctfuser/challenge
 
 RUN chown -R ctfuser:ctfuser /home/ctfuser/challenge && \
     chmod +x /home/ctfuser/challenge/start.sh && \
     echo "source /home/ctfuser/challenge/start.sh" >> /home/ctfuser/.bashrc
+
+    RUN gcc /home/ctfuser/challenge/verificare_flag.c -o /home/ctfuser/challenge/verificare_flag
 
     RUN chown root:root /home/ctfuser/challenge/verificare_flag && \
     chmod 4755 /home/ctfuser/challenge/verificare_flag

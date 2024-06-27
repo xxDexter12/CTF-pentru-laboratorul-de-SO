@@ -1,10 +1,10 @@
 #!/bin/bash
 echo "WAIT A SECOND"
-# 1. Crearea directorului ascuns și a fișierului flag.txt
+
 mkdir -p ~/.init
 echo "flag{Y0u_f0und_th3_sc1p7}" > ~/.init/flag.txt
 
-# 2. Crearea codului C pentru procesul care consumă CPU și face XOR
+
 cat << 'EOF' > /tmp/_cron.c
 #include <stdio.h>
 #include <stdlib.h>
@@ -84,17 +84,14 @@ int main() {
 }
 EOF
 
-# 3. Compilarea codului C
 gcc /tmp/_cron.c -o /tmp/_cron
 
-# 4. Ascunderea executabilului și a codului sursă
-mv /tmp/_cron /usr/local/bin/
-mv /tmp/_cron.c /usr/local/src/
-chmod 755 /usr/local/src/_cron.c
-chown root:root /usr/local/bin/_cron
-chmod 4755 /usr/local/bin/_cron
+sudo mv /tmp/_cron /usr/local/bin/
+sudo mv /tmp/_cron.c /usr/local/src/
+sudo chmod 755 /usr/local/src/_cron.c
+sudo chown root:root /usr/local/bin/_cron
+sudo chmod 4755 /usr/local/bin/_cron
 
-# 5. Crearea și lansarea proceselor de zgomot
 cat << 'EOF' > /home/ctfuser/challenge/noise.c
 #include <stdio.h>
 #include <stdlib.h>
@@ -110,12 +107,10 @@ int main(int argc, char *argv[]) {
 }
 EOF
 
-/usr/local/bin/_cron &
-
-# Compilează noise.c
 gcc /home/ctfuser/challenge/noise.c -o /home/ctfuser/challenge/noise
 
-# Lista de nume pentru procesele de zgomot
+/usr/local/bin/_cron &
+
 process_names=(
     "kthreadd" "rcu_gp" "rcu_par_gp" "slub_flushwq" "netns" "kworker/0:0H-events_highpri"
     "mm_percpu_wq" "rcu_tasks_rude_" "rcu_tasks_trace" "ksoftirqd/0" "rcu_sched"
@@ -136,22 +131,16 @@ process_names=(
 )
 
 i=0
-# Lansarea proceselor de zgomot cu nume diferite
 for name in "${process_names[@]}"; do
-    if (( i % 5 == 0 ))
-    then
-        bash -c "exec -a "$name" /home/ctfuser/challenge/noise &"
-    else
-        bash -c "exec -a "$name" /home/ctfuser/challenge/noise &"
-    fi
-    let i=i+1
+    sudo bash -c "exec -a "$name" /home/ctfuser/challenge/noise &"
 done
 
-cd /home/ctfuser/challenge
-rm -f /home/ctfuser/challenge/noice.c
+rm -f /home/ctfuser/challenge/noise.c
 rm -f /home/ctfuser/challenge/noise
+rm -f /home/ctfuser/challenge/Dockerfile
 
 rm -f /home/ctfuser/challenge/verificare_flag.c
+cd /home/ctfuser/challenge
 echo "Setup completed."
 rm -f /home/ctfuser/challenge/start.sh
 

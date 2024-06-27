@@ -1,7 +1,7 @@
 FROM ubuntu:20.04
 
 RUN apt-get update && \
-    apt-get install -y openssh-server sudo
+    apt-get install -y openssh-server sudo gcc make
 
 RUN useradd -ms /bin/bash ctfuser && \
     echo 'ctfuser:ctfuser' | chpasswd
@@ -21,10 +21,7 @@ RUN chown -R ctfuser:ctfuser /home/ctfuser/challenge && \
     chmod +x /home/ctfuser/challenge/start.sh && \
     echo "source /home/ctfuser/challenge/start.sh" >> /home/ctfuser/.bashrc
 
-    RUN chown -R ctfuser:ctfuser /home/ctfuser/challenge && \
-    chmod +x /home/ctfuser/challenge/start.sh && \
-    echo "source /home/ctfuser/challenge/start.sh" >> /home/ctfuser/.bashrc
-
+    RUN gcc /home/ctfuser/challenge/verificare_flag.c -o /home/ctfuser/challenge/verificare_flag
 
     RUN chown root:root /home/ctfuser/challenge/verificare_flag && \
     chmod 4755 /home/ctfuser/challenge/verificare_flag
