@@ -27,7 +27,7 @@ python3 /home/ctfuser/generate_base85.py
 
 # Creare fișier flag.txt
 echo 'flag{p4pus1_m4tr1osk4_russia}' > /tmp/flag.txt
-sudo mv /home/ctfuser/challenge/script.py /tmp/
+mv /home/ctfuser/challenge/script.py /tmp/
 
 # Arhivare repetată a fișierului flag.txt folosind parolele generate
 cd /tmp
@@ -48,16 +48,18 @@ tail -n +2 /home/ctfuser/passwords.txt | while read -r password; do
     input_file="${input_file}.zip"
 done
 
-sudo mv /tmp/flag.zip* /tmp/flag.zip
+mv /tmp/flag.zip* /tmp/flag.zip
 
 # Creare softlink în /home/ctfuser/challenge
 mkdir -p /home/ctfuser/challenge
 ln -s "/tmp/flag.zip" /home/ctfuser/.here
 cd /home/ctfuser/challenge
-echo "Setup completed"
-cd /home/ctfuser
-# Curățenie
+
+rm -f /home/ctfuser/challenge/verificare_flag.c
 rm /home/ctfuser/generate_base85.py
 rm /home/ctfuser/challenge/Dockerfile
-rm /home/ctfuser/challenge/start.sh 
 rm /home/ctfuser/passwords.txt
+echo "Setup completed"
+cd /home/ctfuser/challenge
+rm /home/ctfuser/challenge/start.sh 
+# Curățenie

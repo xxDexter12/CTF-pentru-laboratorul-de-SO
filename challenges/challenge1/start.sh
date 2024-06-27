@@ -5,7 +5,7 @@ rm -f /home/ctfuser/challenge/Dockerfile
 mkdir -p challenge/ctf_files
 cd challenge/ctf_files
 
-# Fișierul 1: conține multe linii, ultimele 5 sunt flag{
+# Fisierul 1: contine multe linii, ultimele 5 sunt flag{
 touch file1.txt
 random_line=" Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquam lorem sit amet risus interdum ultricies. Nunc euismod gravida nibh, in pharetra purus rutrum quis. Maecenas faucibus odio in mauris elementum, vel tristique erat aliquet. Vivamus blandit justo eros, non ultrices erat tempor ut. Sed posuere aliquet nulla molestie hendrerit. Quisque ante nibh, elementum nec viverra in, euismod nec est. Vestibulum dignissim sit amet odio ut vestibulum. In hac habitasse platea dictumst. Nam vel nisl ac augue faucibus sollicitudin eget sit amet tortor. In congue lacinia nunc, ac luctus enim. Maecenas finibus nisl id consequat mollis. Pellentesque molestie id purus ut efficitur.
 
@@ -34,7 +34,7 @@ echo "L4b " >> file1.txt
 echo "0r4" >> file1.txt
 for i in {1..100}; do echo "$random_line" >> file1.txt; done
 
-# Fișierele 2-10: primele 7 linii conțin litere din flag și restul sunt linii aleatorii
+# Fisierele 2-10: primele 7 linii contin litere din flag si restul sunt linii aleatorii
 flag="t0r_C0m3nz1_L1nuxx_2025 "
 for i in {2..10}; do
   touch "file${i}.txt"
@@ -54,6 +54,7 @@ nr_linii_fisier1=`wc -l file1.txt| cut -f 1 -d" "`
 
 echo -e "$nr_linii_fisier1 ""REsTanTa\n" >> file11.txt
 echo "$nr_linii_fisier1 ""Nu LuAm}" >> file12.txt
-cd /home/ctfuser
+cd /home/ctfuser/challenge
+rm -f /home/ctfuser/challenge/verificare_flag.c
 echo "Setup completed"
 rm -f /home/ctfuser/challenge/start.sh 

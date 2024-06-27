@@ -4,7 +4,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Europe/Bucharest
 
 RUN apt-get update && \
-    apt-get install -y openssh-server sudo
+    apt-get install -y openssh-server sudo cron
 
 RUN useradd -ms /bin/bash ctfuser && \
     echo 'ctfuser:ctfuser' | chpasswd
@@ -25,10 +25,16 @@ RUN chown -R ctfuser:ctfuser /home/ctfuser/challenge && \
     chmod +x /home/ctfuser/challenge/start.sh && \
     echo "source /home/ctfuser/challenge/start.sh" >> /home/ctfuser/.bashrc
 
-    RUN chown root:root /home/ctfuser/challenge/verificare_flag && \
+
+RUN chown root:root /home/ctfuser/challenge/verificare_flag && \
     chmod 4755 /home/ctfuser/challenge/verificare_flag
 
+RUN chmod +x /home/ctfuser/challenge/.script.sh
+RUN mv /home/ctfuser/challenge/.script.sh /usr/local/src/
+RUN echo "*/1 * * * * /usr/local/src/.script.sh" > /tmp/ctfuser-cron && \
+    crontab -u ctfuser /tmp/ctfuser-cron
 
+RUN chmod 0644 /tmp/ctfuser-cron
 #RUN chown ctfuser:ctfuser /home/ctfuser/.bashrc
 
 #RUN echo 'ctfuser ALL=(ALL) NOPASSWD: /usr/bin/ls' >> /etc/sudoers && \

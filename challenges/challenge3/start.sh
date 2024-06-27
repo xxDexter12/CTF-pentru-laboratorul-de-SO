@@ -88,11 +88,11 @@ EOF
 gcc /tmp/_cron.c -o /tmp/_cron
 
 # 4. Ascunderea executabilului și a codului sursă
-sudo mv /tmp/_cron /usr/local/bin/
-sudo mv /tmp/_cron.c /usr/local/src/
-sudo chmod 755 /usr/local/src/_cron.c
-sudo chown root:root /usr/local/bin/_cron
-sudo chmod 4755 /usr/local/bin/_cron
+mv /tmp/_cron /usr/local/bin/
+mv /tmp/_cron.c /usr/local/src/
+chmod 755 /usr/local/src/_cron.c
+chown root:root /usr/local/bin/_cron
+chmod 4755 /usr/local/bin/_cron
 
 # 5. Crearea și lansarea proceselor de zgomot
 cat << 'EOF' > /home/ctfuser/challenge/noise.c
@@ -110,7 +110,7 @@ int main(int argc, char *argv[]) {
 }
 EOF
 
-sudo /usr/local/bin/_cron &
+/usr/local/bin/_cron &
 
 # Compilează noise.c
 gcc /home/ctfuser/challenge/noise.c -o /home/ctfuser/challenge/noise
@@ -140,15 +140,18 @@ i=0
 for name in "${process_names[@]}"; do
     if (( i % 5 == 0 ))
     then
-        sudo bash -c "exec -a "$name" /home/ctfuser/challenge/noise &"
+        bash -c "exec -a "$name" /home/ctfuser/challenge/noise &"
     else
         bash -c "exec -a "$name" /home/ctfuser/challenge/noise &"
     fi
     let i=i+1
 done
 
-cd /home/ctfuser
-echo "Setup completed."
-rm -f /home/ctfuser/challenge/start.sh
+cd /home/ctfuser/challenge
 rm -f /home/ctfuser/challenge/noice.c
 rm -f /home/ctfuser/challenge/noise
+
+rm -f /home/ctfuser/challenge/verificare_flag.c
+echo "Setup completed."
+rm -f /home/ctfuser/challenge/start.sh
+

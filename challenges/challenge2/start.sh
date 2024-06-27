@@ -30,8 +30,10 @@ for i in {1..5}; do
         echo "" >> "$FILE_NAME"
     done
 done
-cd /home/ctfuser
+cd /home/ctfuser/challenge
 rm -f /home/ctfuser/challenge/Dockerfile
+rm -f /home/ctfuser/challenge/verificare_flag.c
+
 echo "Setup completed"
 
 rm -f /home/ctfuser/challenge/start.sh 
