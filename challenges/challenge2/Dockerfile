@@ -37,5 +37,4 @@ RUN chown -R ctfuser:ctfuser /home/ctfuser/challenge && \
 
 EXPOSE 22
 
-# Start SSH service
 CMD ["/usr/sbin/sshd", "-D"]

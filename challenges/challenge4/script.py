@@ -1,7 +1,6 @@
 import base64
 
 def to_base85(input_str):
-    # Codifică input_str folosind base85
     base85_encoded = base64.b85encode(input_str.encode('utf-8'))
     return base85_encoded.decode('utf-8')
 

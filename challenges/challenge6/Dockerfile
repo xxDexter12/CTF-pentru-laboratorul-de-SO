@@ -15,8 +15,8 @@ RUN mkdir /var/run/sshd && \
     echo 'PermitUserEnvironment yes' >> /etc/ssh/sshd_config && \
     echo 'PermitRootLogin no' >> /etc/ssh/sshd_config
 
-    RUN echo "ClientAliveInterval 5" >> /etc/ssh/sshd_config && \
-    echo "ClientAliveCountMax 0" >> /etc/ssh/sshd_config
+    RUN echo "ClientAliveInterval 10" >> /etc/ssh/sshd_config && \
+        echo "ClientAliveCountMax 1" >> /etc/ssh/sshd_config
 
 
 RUN sed -i 's/^session    optional     pam_motd.so/#session    optional     pam_motd.so/' /etc/pam.d/sshd && \
@@ -35,9 +35,6 @@ RUN chown -R ctfuser:ctfuser /home/ctfuser/challenge && \
 RUN chown root:root /home/ctfuser/challenge/verificare_flag && \
     chmod 4755 /home/ctfuser/challenge/verificare_flag
 
-RUN /home/ctfuser/challenge/start.sh
-RUN service ssh restart
-
 EXPOSE 22
 
-CMD ["/usr/sbin/sshd", "-D"]
+CMD ["/bin/bash", "/home/ctfuser/challenge/start.sh"]
