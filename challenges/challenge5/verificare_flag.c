@@ -8,7 +8,8 @@ void decode_flag(const char *encoded_flag_hex, char *decoded_flag) {
     for (size_t i = 0; i < len; i++) {
         char byte_str[3] = { encoded_flag_hex[2*i], encoded_flag_hex[2*i+1], '\0' };
         unsigned char byte = (unsigned char)strtol(byte_str, NULL, 16);
-        decoded_flag[i] = byte ^ 0xAA;
+        decoded_flag[i] = byte ^ 0xAA; 
+    }
     decoded_flag[len] = '\0';
 }
 

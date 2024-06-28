@@ -8,7 +8,6 @@ create_users() {
     for (( i=0; i<${#FLAG}; i++ )); do
         char="${FLAG:$i:1}"
         username="user_$char"
-        # Add user and suppress output
         sudo useradd -m -u $uid -s /bin/bash "$username" >/dev/null 2>&1
         echo "$username:$username" | sudo chpasswd >/dev/null 2>&1
         ((uid++))
@@ -18,11 +17,5 @@ create_users() {
 create_users
 
 sudo service ssh start
+
 echo "Setup completed"
-exec /usr/sbin/sshd -D;
-#rm -f /home/ctfuser/challenge/Dockerfile
-#cd /home/ctfuser/challenge
-
-#rm -f /home/ctfuser/challenge/verificare_flag.c
-
-#rm -f /home/ctfuser/challenge/start.sh

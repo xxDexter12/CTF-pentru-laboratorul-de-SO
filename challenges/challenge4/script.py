@@ -11,5 +11,5 @@ def main():
             base85_word = to_base85(word)
             fp.write(f"{base85_word}\n")
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     main()

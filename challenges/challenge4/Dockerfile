@@ -4,7 +4,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Europe/Bucharest
 
 RUN apt-get update && \
-    apt-get install -y openssh-server sudo gcc make
+    apt-get install -y openssh-server sudo gcc make zip unzip
 
 RUN useradd -ms /bin/bash ctfuser && \
     echo 'ctfuser:ctfuser' | chpasswd
@@ -33,7 +33,7 @@ RUN chown -R ctfuser:ctfuser /home/ctfuser/challenge && \
     chmod 4755 /home/ctfuser/challenge/verificare_flag
 
 
-#RUN chown ctfuser:ctfuser /home/ctfuser/.bashrc
+RUN chown ctfuser:ctfuser /home/ctfuser/.bashrc
 
 #RUN echo 'ctfuser ALL=(ALL) NOPASSWD: /usr/bin/ls' >> /etc/sudoers && \
  #   echo 'ctfuser ALL=(ALL) NOPASSWD: !/bin/su, !/usr/bin/su, !/usr/bin/sudo' >> /etc/sudoers && \

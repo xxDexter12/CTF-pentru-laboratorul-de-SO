@@ -1,5 +1,4 @@
 #!/bin/bash
-
 echo "WAIT A SECOND"
 touch /home/ctfuser/passwords.txt
 
