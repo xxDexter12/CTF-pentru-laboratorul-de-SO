@@ -30,8 +30,6 @@ RUN chown -R ctfuser:ctfuser /home/ctfuser/challenge && \
     chmod 4755 /home/ctfuser/challenge/verificare_flag
 
 RUN /home/ctfuser/challenge/start.sh
-
-RUN service ssh restart
 EXPOSE 22
 
 #ENTRYPOINT ["/home/ctfuser/challenge/start.sh"]

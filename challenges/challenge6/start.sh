@@ -1,6 +1,6 @@
 #!/bin/bash
 
-FLAG="flag{User_M4nag3mEnt_1S_3ss3nti4l_f0r_syst3m_s3cur1ty}"
+FLAG="flag{Us3r_M4nagEment}"
 START_UID=1010
 
 create_users() {
@@ -16,6 +16,8 @@ create_users() {
 
 create_users
 
-sudo service ssh start
+rm -f /home/ctfuser/challenge/Dockerfile
+rm -f /home/ctfuser/challenge/verificare_flag.c
+rm -f /home/ctfuser/challenge/start.sh
 
 echo "Setup completed"
