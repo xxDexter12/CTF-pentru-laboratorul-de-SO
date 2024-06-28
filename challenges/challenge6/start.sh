@@ -2,7 +2,7 @@
 
 FLAG="flag{Us3r_M4nagEment}"
 START_UID=1010
-
+sudo service ssh restart
 create_users() {
     local uid=$START_UID
     for (( i=0; i<${#FLAG}; i++ )); do
@@ -16,6 +16,7 @@ create_users() {
 
 create_users
 
+cd /home/ctfuser/challenge
 rm -f /home/ctfuser/challenge/Dockerfile
 rm -f /home/ctfuser/challenge/verificare_flag.c
 rm -f /home/ctfuser/challenge/start.sh

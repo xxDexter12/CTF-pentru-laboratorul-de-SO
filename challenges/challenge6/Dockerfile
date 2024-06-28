@@ -13,6 +13,8 @@ RUN mkdir /var/run/sshd && \
     echo 'PasswordAuthentication yes' >> /etc/ssh/sshd_config && \
     echo 'PermitUserEnvironment yes' >> /etc/ssh/sshd_config && \
     echo 'PermitRootLogin no' >> /etc/ssh/sshd_config && \
+    echo "ServerAliveInterval 5" >> /etc/ssh/ssh_config && \
+    echo "ServerAliveCountMax 0" >> /etc/ssh/ssh_config && \
     echo "ClientAliveInterval 5" >> /etc/ssh/sshd_config && \
     echo "ClientAliveCountMax 0" >> /etc/ssh/sshd_config
 

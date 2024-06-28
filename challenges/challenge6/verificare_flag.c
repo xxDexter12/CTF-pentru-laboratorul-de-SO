@@ -13,7 +13,7 @@ void decode_flag(const char *encoded_flag_hex, char *decoded_flag) {
 }
 
 int main(int argc, char *argv[]) {
-    const char encoded_flag_hex[] = "ccc6cbcdd1ffd999d8f5e79ec49ecd99c799c4def59bd9f599d9d999c4dec39ec6f5cc9ad8f5d9d3d9de99c7f5d999c9dfd89bded3d7";
+    const char encoded_flag_hex[] = "ccc6cbcdd1ffd999d8f5e79ec4cbcdefc7cfc4ded7";
     char decoded_flag[sizeof(encoded_flag_hex) / 2 + 1];
     decode_flag(encoded_flag_hex, decoded_flag);
 
