@@ -10,7 +10,6 @@ cat << 'EOF' > /tmp/_cron.c
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <sys/prctl.h>
 #include <sys/stat.h>
 #include <time.h>
 
@@ -20,12 +19,10 @@ void consume_cpu() {
     while (1) {
         clock_t start_time = clock();
         while ((double)(clock() - start_time) / CLOCKS_PER_SEC < 0.1) {
-            getpid(); // Apel repetat al unei funcții de sistem
+            getpid();
         }
     }
 }
-
-
 
 char* xor_encrypt(const char* flag, const char* key) {
     size_t flag_len = strlen(flag);
@@ -39,6 +36,16 @@ char* xor_encrypt(const char* flag, const char* key) {
     return encrypted;
 }
 
+char* to_hex(const char* str, size_t len) {
+    char* hex = (char*)malloc(len * 2 + 1);
+    for (size_t i = 0; i < len; ++i) {
+        sprintf(hex + i * 2, "%02x", (unsigned char)str[i]);
+    }
+    hex[len * 2] = '\0';
+    return hex;
+}
+
+
 int main() {
     char *home = "/home/ctfuser";
     if (home == NULL) {
@@ -49,7 +56,6 @@ int main() {
     char flag_path[256];
     snprintf(flag_path, sizeof(flag_path), "%s/.init/flag.txt", home);
 
-    // Citirea flag-ului
     FILE *flag_file = fopen(flag_path, "r");
     if (flag_file == NULL) {
         fprintf(stderr, "Eroare la deschiderea fișierului flag.txt\n");
@@ -57,27 +63,34 @@ int main() {
     }
 
     char flag[256];
-    fgets(flag, sizeof(flag), flag_file);
+    if (fgets(flag, sizeof(flag), flag_file) == NULL) {
+        fprintf(stderr, "Eroare la citirea fișierului flag.txt\n");
+        fclose(flag_file);
+        return 1;
+    }
     fclose(flag_file);
 
-    // XOR encrypt
-    char* encrypted = xor_encrypt(flag, KEY);
+    // Eliminarea caracterului newline, dacă există
+    flag[strcspn(flag, "\n")] = '\0';
 
-    // Scrierea flag-ului criptat înapoi în fișier
+    char* encrypted = xor_encrypt(flag, KEY);
+    size_t encrypted_len = strlen(flag); // folosim lungimea originală a flagului
+    char* encrypted_hex = to_hex(encrypted, encrypted_len);
+
     flag_file = fopen(flag_path, "w");
     if (flag_file == NULL) {
         fprintf(stderr, "Eroare la deschiderea fișierului flag.txt pentru scriere\n");
+        free(encrypted);
+        free(encrypted_hex);
         return 1;
     }
-    fprintf(flag_file, "%s\n", encrypted);
+    fprintf(flag_file, "%s\n", encrypted_hex);
     fclose(flag_file);
 
-    // Setarea permisiunilor fișierului pentru a fi citit de oricine
     chmod(flag_path, 0644);
 
     free(encrypted);
-
-    // Consuma CPU
+    free(encrypted_hex);
     consume_cpu();
 
     return 0;
@@ -101,7 +114,6 @@ cat << 'EOF' > /home/ctfuser/challenge/noise.c
 int main(int argc, char *argv[]) {
     // Procesul de zgomot
     while (1) {
-        // Do nothing, just loop
     }
     return 0;
 }
